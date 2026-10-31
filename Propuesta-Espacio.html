@@ -134,12 +134,18 @@ h1, h2, h3, p { margin: 0; }
 .paquete { position: relative; display: grid; gap: 14px; align-content: start; padding: 24px; border-radius: 22px; background: var(--tarjeta); border: 1px solid var(--linea); }
 .paquete.reco { border-color: var(--acento); box-shadow: 0 0 0 1px var(--acento), 0 20px 50px rgba(245,194,5,.1); }
 .paquete .etiqueta { position: absolute; top: -12px; left: 20px; padding: 3px 12px; border-radius: 999px; background: var(--acento); color: var(--sobre); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.paquete h3 { font-family: var(--f-titulo); font-size: 2rem; text-transform: uppercase; }
+.paquete h3 { font-family: var(--f-titulo); text-transform: uppercase; }
 .paquete .para { color: var(--tinta2); font-size: .9rem; }
-.precio { display: grid; gap: 2px; }
-.precio b { font-family: var(--f-titulo); font-size: 2.4rem; color: var(--acento); line-height: 1; }
-.precio span { color: var(--tinta2); font-size: .9rem; }
-.paquete ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: .92rem; }
+.paq-nombre { font-size: .75rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: var(--acento); }
+.paquete h3 { font-size: 1.75rem; line-height: 1; }
+.precio { display: grid; gap: 2px; padding-top: 4px; }
+.precio b { font-family: var(--f-titulo); font-size: 3rem; color: var(--acento); line-height: 1; }
+.precio b small { font-size: 1.2rem; color: var(--tinta2); margin-left: 4px; font-weight: 700; }
+.precio span { color: var(--tinta2); font-size: .85rem; }
+.paquete { grid-row: span 6; grid-template-rows: subgrid; row-gap: 12px; }
+.arranque { align-self: start; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--fondo2); border: 1px solid var(--linea); font-size: .85rem; color: var(--tinta2); }
+.arranque strong { color: var(--tinta); font-size: 1rem; white-space: nowrap; }
+.paquete ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; font-size: .92rem; }
 .paquete li { display: flex; gap: 8px; align-items: flex-start; }
 .paquete li .ico { color: var(--acento); margin-top: 3px; }
 .incluye { margin-top: 20px; color: var(--tinta2); display: flex; flex-wrap: wrap; gap: 8px 22px; }
@@ -348,10 +354,10 @@ function calc() {
 
 /* paquetes */
 const PAQ = [
-  { id: "esencial", n: "Esencial", para: "Para vender en línea desde ya.", ini: 2500, mes: 750, x: ["Página con todas las animaciones", "«Grábalo tú» y probador en la fachada", "Cotizador con mayoreo y seguimiento", "Aprobación de pruebas por link", "Panel de pedidos y avisos por WhatsApp", "Portafolio y reseñas"] },
-  { id: "pro", n: "Pro", para: "La página y todo el taller.", ini: 6500, mes: 1500, reco: true, x: ["Todo lo de Esencial", "Producción por máquina y modo taller", "Inventario que se descuenta solo", "Entregas y calendario", "Caja, cierre y ganancia por pedido", "Clientes, recompra y cotización PDF", "Diseñadores y PIN por rol"] },
-  { id: "total", n: "Total", para: "Para crecer sin techo.", ini: 12000, mes: 2500, x: ["Todo lo de Pro", "Facturación FEL conectada (certificador aparte)", "Dominio propio incluido", "Varias sucursales o bodegas", "Reporte mensual en PDF", "Capacitación presencial y soporte prioritario"] },
-  { id: "compra", n: "Compra única", para: "El sistema queda a su nombre.", ini: 30000, iniMax: 38000, mes: 600, x: ["Pro o Total, con el código a su nombre", "Instalación y capacitación", "3 meses de ajustes incluidos", "Q600 al mes solo por hosting y mantenimiento"] }
+  { id: "esencial", n: "Esencial", t: "Página que vende + pedidos en línea", para: "Para empezar a recibir y seguir pedidos desde el celular.", ini: 2500, mes: 750, x: ["Página con todas las animaciones", "«Grábalo tú» y probador en la fachada", "Cotizador con mayoreo y seguimiento", "Aprobación de pruebas por link", "Panel de pedidos y avisos por WhatsApp", "Portafolio y reseñas"] },
+  { id: "pro", n: "Pro", t: "Todo lo anterior + el taller completo", para: "Para que mostrador, diseño y máquinas trabajen en el mismo sistema.", ini: 6500, mes: 1500, reco: true, x: ["Todo lo de Esencial", "Producción por máquina y modo taller", "Inventario que se descuenta solo", "Entregas y calendario", "Caja, cierre y ganancia por pedido", "Clientes, recompra y cotización PDF", "Diseñadores y PIN por rol"] },
+  { id: "total", n: "Total", t: "Todo + factura electrónica y sucursales", para: "Para facturar desde el sistema y abrir otra sede o bodega.", ini: 12000, mes: 2500, x: ["Todo lo de Pro", "Facturación FEL conectada (certificador aparte)", "Dominio propio incluido", "Varias sucursales o bodegas", "Reporte mensual en PDF", "Capacitación presencial y soporte prioritario"] },
+  { id: "compra", n: "Compra única", t: "El sistema es suyo para siempre", para: "Paga una vez y solo cubre el hosting cada mes.", ini: 30000, iniMax: 38000, mes: 600, x: ["Pro o Total, con el código a su nombre", "Instalación y capacitación", "3 meses de ajustes incluidos", "Q600 al mes solo por hosting y mantenimiento"] }
 ];
 const EXTRAS = [
   { id: "dominio", n: "Dominio propio (.com)", d: "Su dirección web, por ejemplo espaciocreativo.com", anual: 85, no: ["total"] },
@@ -363,15 +369,16 @@ const iva = () => $("#iva").checked ? 1.12 : 1;
 function pintarPaquetes() {
   const k = iva();
   $("#lista-paquetes").innerHTML = PAQ.map((p, i) => `<article class="paquete revela visto ${p.reco ? "reco" : ""}" style="--i:${i}">${p.reco ? `<span class="etiqueta">Recomendado</span>` : ""}
-    <h3>${p.n}</h3><p class="para">${p.para}</p>
-    <div class="precio"><b>${Q(p.ini * k)}${p.iniMax ? "–" + Q(p.iniMax * k).slice(1) : ""}</b><span>${p.iniMax ? "una sola vez" : "de arranque"} + <strong>${Q(p.mes * k)}</strong> al mes</span></div>
+    <p class="paq-nombre">${p.n}</p><h3>${p.t}</h3><p class="para">${p.para}</p>
+    <div class="precio"><b>${Q(p.mes * k)}<small>/mes</small></b><span>${p.iniMax ? "solo hosting y mantenimiento" : "mensualidad, mes a mes"}</span></div>
+    <div class="arranque"><span>${p.iniMax ? "Pago único" : "Arranque (una vez)"}</span><strong>${Q(p.ini * k)}${p.iniMax ? "–" + Q(p.iniMax * k).slice(1) : ""}</strong></div>
     <ul>${p.x.map(x => `<li>${OK}<span>${x}</span></li>`).join("")}</ul></article>`).join("");
   $("#incluye").innerHTML = ["Datos en la nube: todos ven lo mismo", "Con su marca", "Sin comisión por venta", "Respaldo diario", "Cambios menores incluidos"].map(x => `<span>${OK}${x}</span>`).join("");
 }
 $("#iva").addEventListener("change", () => { pintarPaquetes(); resumen(); });
 
 /* arme su plan */
-$("#plan-paquetes").innerHTML = PAQ.map(p => `<label class="opcion"><input type="radio" name="paq" value="${p.id}" ${p.reco ? "checked" : ""}><span><strong>${p.n}</strong><small>${p.para}</small></span><b>${Q(p.ini)}${p.iniMax ? "+" : ""} + ${Q(p.mes)}/mes</b></label>`).join("");
+$("#plan-paquetes").innerHTML = PAQ.map(p => `<label class="opcion"><input type="radio" name="paq" value="${p.id}" ${p.reco ? "checked" : ""}><span><strong>${p.n} · ${p.t}</strong><small>Arranque ${Q(p.ini)}${p.iniMax ? "–" + Q(p.iniMax).slice(1) : ""}</small></span><b>${Q(p.mes)}/mes</b></label>`).join("");
 $("#plan-extras").innerHTML = EXTRAS.map(e => `<label class="opcion" data-extra="${e.id}"><input type="checkbox" name="extra" value="${e.id}"><span><strong>${e.n}</strong><small>${e.d}</small></span><b>${e.ini ? Q(e.ini) + " una vez" : e.mes ? "+" + Q(e.mes) + "/mes" : Q(e.anual) + "/año"}</b></label>`).join("");
 function resumen() {
   const k = iva(), f = $("#plan-form"), p = PAQ.find(x => x.id === f.paq.value);
@@ -379,10 +386,10 @@ function resumen() {
   document.querySelectorAll("[data-extra]").forEach(l => { const e = EXTRAS.find(x => x.id === l.dataset.extra); l.hidden = (e.no || []).includes(p.id); });
   const ini = p.ini + extras.reduce((s, e) => s + (e.ini || 0), 0), mes = p.mes + extras.reduce((s, e) => s + (e.mes || 0), 0), anual = extras.reduce((s, e) => s + (e.anual || 0), 0);
   $("#resumen").innerHTML = `<div><dt>Paquete</dt><dd>${p.n}</dd></div>${extras.map(e => `<div><dt>${e.n}</dt><dd>${e.ini ? Q(e.ini * k) : e.mes ? "+" + Q(e.mes * k) + "/mes" : Q(e.anual * k) + "/año"}</dd></div>`).join("")}
-    <div class="total"><dt>${p.iniMax ? "Pago único" : "Arranque"}</dt><dd>${Q(ini * k)}${p.iniMax ? "–" + Q((ini - p.ini + p.iniMax) * k).slice(1) : ""}</dd></div>
-    <div class="total"><dt>Al mes</dt><dd>${Q(mes * k)}</dd></div>${anual ? `<div><dt>Al año</dt><dd>${Q(anual * k)}</dd></div>` : ""}
+    <div class="total"><dt>Al mes</dt><dd>${Q(mes * k)}</dd></div>
+    <div><dt>${p.iniMax ? "Pago único" : "Arranque (una vez)"}</dt><dd>${Q(ini * k)}${p.iniMax ? "–" + Q((ini - p.ini + p.iniMax) * k).slice(1) : ""}</dd></div>${anual ? `<div><dt>Al año</dt><dd>${Q(anual * k)}</dd></div>` : ""}
     <div><dt>${k > 1 ? "Con IVA" : "Sin IVA"}</dt><dd></dd></div>`;
-  const txt = `Hola Antonio, soy de Espacio Creativo. Me interesa el paquete ${p.n}${extras.length ? " con " + extras.map(e => e.n).join(", ") : ""}. Arranque ${Q(ini * k)}${p.iniMax ? " a " + Q((ini - p.ini + p.iniMax) * k) : ""} y ${Q(mes * k)} al mes${k > 1 ? " (con IVA)" : ""}. ¿Cuándo empezamos?`;
+  const txt = `Hola Antonio, soy de Espacio Creativo. Me interesa el paquete ${p.n} (${p.t})${extras.length ? " con " + extras.map(e => e.n).join(", ") : ""}: ${Q(mes * k)} al mes y ${p.iniMax ? "pago único de " : "arranque de "}${Q(ini * k)}${p.iniMax ? " a " + Q((ini - p.ini + p.iniMax) * k) : ""}${k > 1 ? " (con IVA)" : ""}. ¿Cuándo empezamos?`;
   $("#plan-wa").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(txt);
 }
 $("#plan-form").addEventListener("change", resumen);
