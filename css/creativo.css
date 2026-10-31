@@ -149,7 +149,7 @@ body.con-intro .despegue * { animation-play-state: paused !important; }
 }
 @media (max-width: 860px) {
   .tornasol-hero.tornasol-dona { left: -24vw; top: 4vh; }
-  .tornasol-hero.tornasol-gota { left: 76vw; top: 36vh; width: 70px; }
+  .tornasol-hero.tornasol-gota { display: none; }
 }
 @media (max-width: 620px) { .contacto .tornasol { left: 80%; top: 1%; width: 64px; } }
 

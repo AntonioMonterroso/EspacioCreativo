@@ -81,12 +81,31 @@
   position: absolute; z-index: 2; inset: auto var(--gutter) 18vh var(--gutter); font-family: var(--f-titulo); font-weight: 900; text-transform: uppercase;
   font-size: var(--t-4); line-height: 0.95; opacity: clamp(0, calc((var(--p) - 0.6) * 4), 1); transform: translateY(calc((1 - var(--p)) * 60px));
 }
+/* celular: el cohete va arriba del texto (en el flujo), nunca encima */
 @media (max-width: 860px) {
-  .despegue-texto { max-width: none; }
-  .despegue-fijo { align-items: end; padding-bottom: 92px; }
-  .cohete { right: 50%; translate: 50% 0; top: 9vh; bottom: auto; width: min(46vw, 220px); }
-  .despegue-texto { gap: 16px; }
+  .despegue-fijo { display: flex; flex-direction: column; justify-content: center; align-items: stretch; gap: clamp(8px, 2.5vh, 24px); padding: 76px var(--gutter) 28px; }
+  .cohete { order: -1; position: relative; right: auto; top: auto; bottom: auto; translate: none; align-self: center; flex: none; width: min(40vw, 26vh, 200px); }
+  .cohete-estela { height: 60vh; }
+  .despegue-texto { max-width: none; gap: 14px; }
+  .hero-titulo { font-size: clamp(2.6rem, 1.4rem + 7vw, 4.4rem); }
   .hero-sub { font-size: var(--t-1); }
+  .despegue-texto .fila-btns { gap: 10px; }
+  .despegue-texto .btn-grande { min-height: 48px; padding: 10px 18px; font-size: var(--t-1); }
+}
+/* celular bajito (o el de la propuesta): todo un poco más compacto */
+@media (max-width: 860px) and (max-height: 720px) {
+  .despegue-texto .eyebrow { font-size: 0.66rem; letter-spacing: 0.16em; }
+  .hero-titulo { font-size: clamp(2.2rem, 1rem + 6.4vw, 3.4rem); }
+  .hero-sub { font-size: 0.9rem; line-height: 1.5; }
+  .cohete { width: min(34vw, 20vh, 160px); }
+}
+@media (max-width: 400px) {
+  .nav { gap: 10px; padding-inline: 14px; }
+  .logotipo-nav img { height: 24px; }
+  .logotipo-nav .logotipo-sim { width: 28px; }
+  .nav-acciones .btn-acento { min-height: 40px; padding: 8px 14px; font-size: 0.9rem; }
+  .nav-acciones { gap: 4px; }
+  .despegue-texto .btn-grande { padding: 10px 14px; font-size: 0.92rem; }
 }
 
 /* ---------- secciones ---------- */

@@ -56,7 +56,7 @@
 .personaje.tornasol-hero { transform: translate3d(0, calc(var(--p) * var(--vel) * -1vh), 0) rotate(calc(var(--p) * var(--rot) * 1deg)); z-index: 1; }
 .personaje.tornasol-flota { transform: translate3d(0, calc(var(--t, 0) * var(--vel) * -1px), 0) rotate(calc(var(--t, 0) * var(--rot) * 1deg)); }
 @media (max-width: 860px) {
-  .personaje-marciano.tornasol-hero { left: 4vw; top: 9vh; width: 92px; }
+  .personaje-marciano.tornasol-hero { left: auto; right: 3vw; top: auto; bottom: 2vh; width: 64px; }
   .personaje-satelite { left: 64% !important; top: 24px !important; width: 120px !important; }
   .personaje-platillo { left: 62% !important; top: 18px !important; width: 130px !important; }
   .personaje-astronauta { left: 74% !important; top: 3% !important; width: 88px !important; }
