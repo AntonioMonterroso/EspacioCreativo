@@ -1,0 +1,237 @@
+/* ============================================================
+   Taller (Fase 2): panel con menú lateral por rol, producción por
+   máquina, modo taller, entregas, inventario, caja, clientes,
+   cotizaciones y diseñadores. Celular primero; nada se sale a los lados.
+   ============================================================ */
+
+/* ---------- armazón del panel ---------- */
+.panel { min-height: 100dvh; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+.panel-lado {
+  position: sticky; top: 0; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;
+  padding: 18px 14px; border-right: 1px solid var(--linea); background: #0b0b0b;
+}
+.panel-lado-cabeza { display: flex; align-items: center; justify-content: space-between; padding: 0 6px 10px; }
+.panel-cerrar-menu, .panel-abrir-menu, .panel-velo { display: none; }
+.panel-rol { display: inline-flex; gap: 6px; align-items: center; margin: 0 6px 6px; padding: 4px 10px; width: fit-content; border-radius: 999px; background: var(--acento-suave); color: var(--acento); font-size: var(--t-0); font-weight: 700; }
+.panel-grupo { margin: 14px 10px 4px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tenue); }
+.panel-tab {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 8px 12px; border-radius: 12px; border: 0; background: none;
+  color: var(--tinta2); font-weight: 600; text-align: left; cursor: pointer; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.panel-tab:active { transform: scale(0.98); }
+.panel-tab.activo { background: var(--acento-suave); color: var(--acento); }
+@media (hover: hover) and (pointer: fine) { .panel-tab:not(.activo):hover { background: var(--fondo2); color: var(--tinta); } }
+.panel-alerta { margin-left: auto; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: #c63b2b; color: #fff; font-style: normal; font-size: 0.72rem; text-align: center; }
+.panel-lado-pie { margin-top: auto; display: grid; gap: 8px; padding-top: 18px; }
+.panel-principal { min-width: 0; }
+.panel-barra {
+  position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 14px var(--gutter);
+  background: rgba(7, 7, 7, 0.9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--linea);
+}
+.panel-titulo { margin-right: auto; font-family: var(--f-titulo); font-size: var(--t-3); text-transform: uppercase; }
+.panel-cuerpo { padding: 22px var(--gutter) 80px; display: grid; gap: 20px; max-width: 1600px; }
+@media (max-width: 1000px) {
+  .panel { grid-template-columns: 1fr; }
+  .panel-abrir-menu, .panel-cerrar-menu { display: inline-flex; }
+  .panel-lado {
+    position: fixed; z-index: 70; left: 0; top: 0; width: min(300px, 86vw); transform: translateX(-102%);
+    transition: transform 280ms var(--ease-out); box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5);
+  }
+  .menu-panel .panel-lado { transform: none; }
+  .panel-velo { position: fixed; inset: 0; z-index: 65; background: rgba(0, 0, 0, 0.55); }
+  .menu-panel .panel-velo { display: block; animation: aparece 200ms var(--ease-out); }
+}
+@media (max-width: 560px) { .solo-ancho { display: none; } .panel-barra .btn-acento { width: 44px; padding: 0; } }
+
+.alerta-barra { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 16px; border-radius: 14px; background: #3a1512; color: #ffc2b8; border: 1px solid #6b2a22; }
+.alerta-barra b { color: #fff; }
+.lista-simple { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.lista-simple li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 0; border-bottom: 1px solid var(--linea); }
+.lista-simple li:last-child { border-bottom: 0; }
+.lista-simple li > div:first-child { flex: 1; min-width: 200px; display: grid; gap: 2px; }
+.lista-simple li > div:first-child span { color: var(--tenue); font-size: var(--t-0); }
+.fp-caja h3 em, .maq h2 em { margin-left: 6px; font-style: normal; color: var(--tenue); font-weight: 600; }
+.fp-caja h4 { font-size: var(--t-0); color: var(--tinta2); margin-top: 6px; }
+.fp-fila { display: flex; gap: 10px; align-items: center; }
+.fp-fila select, .fp-fila input { min-height: 40px; padding: 6px 10px; flex: 1; min-width: 0; }
+.fp-ops { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fp-ops li { display: flex; gap: 10px; align-items: center; }
+.fp-ops li div { display: grid; font-size: var(--t-0); }
+.fp-ops li span:not(.punto-estado) { color: var(--tenue); }
+.punto-estado.e-neutro { background: var(--tenue); }
+
+/* ---------- producción por máquina ---------- */
+.maquinas { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; align-items: start; }
+.maq { background: var(--fondo2); border: 1px solid var(--linea); border-radius: 18px; padding: 12px; display: grid; gap: 10px; }
+.maq h2 { display: flex; align-items: center; gap: 8px; font-size: var(--t-1); font-weight: 700; padding: 4px 6px; }
+.maq h2 .ico { color: var(--acento); }
+.maq-hechas { display: flex; gap: 6px; align-items: center; color: #7fe09a; font-size: var(--t-0); padding: 2px 6px; }
+.op { display: grid; gap: 10px; padding: 14px; border-radius: 14px; background: var(--tarjeta); border: 1px solid var(--linea); }
+.op-proceso { border-color: var(--acento); box-shadow: 0 0 0 1px var(--acento), 0 10px 30px rgba(245, 194, 5, 0.08); }
+.op-cabeza { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.op-cabeza b { font-family: var(--f-titulo); font-size: var(--t-2); letter-spacing: 0.04em; }
+.op-cuerpo { display: flex; gap: 12px; align-items: flex-start; }
+.op-arte { flex: none; width: 64px; height: 64px; border-radius: 10px; overflow: hidden; background: #fff; display: grid; place-items: center; }
+.op-arte img, .op-arte svg { width: 100%; height: 100%; object-fit: contain; }
+.op-nombre { font-weight: 700; }
+.op-desc { color: var(--tinta2); font-size: var(--t-0); }
+.op-nota { display: flex; gap: 6px; align-items: flex-start; color: var(--acento); font-size: var(--t-0); margin-top: 4px; }
+.op-pedido { color: var(--tenue); font-size: var(--t-0); margin-top: 4px; }
+.op-pie { display: flex; justify-content: space-between; gap: 8px; font-size: var(--t-0); color: var(--tinta2); }
+.op-entrega { display: inline-flex; gap: 6px; align-items: center; }
+.op-entrega.tarde { color: #ff9b8a; font-weight: 700; }
+.op-entrega.hoy { color: var(--acento); font-weight: 700; }
+.op-timer { display: inline-flex; gap: 6px; align-items: center; font-variant-numeric: tabular-nums; }
+.op-btns > .btn-acento { flex: 1; }
+
+/* ---------- modo taller (tablet o TV) ---------- */
+.taller { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr; }
+.taller-barra { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px var(--gutter); background: #0b0b0b; border-bottom: 1px solid var(--linea); }
+.taller-barra h1 { margin-right: auto; font-family: var(--f-titulo); font-size: var(--t-3); text-transform: uppercase; color: var(--acento); }
+.taller-reloj { font-family: var(--f-titulo); font-size: var(--t-3); font-variant-numeric: tabular-nums; }
+.taller-cuerpo { padding: 18px var(--gutter) 48px; display: grid; gap: 16px; align-content: start; }
+.maquinas-grandes { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.maq-grande h2 { font-size: var(--t-2); }
+.op-grande .op-nombre { font-size: var(--t-2); }
+.op-grande .op-desc, .op-grande .op-pedido, .op-grande .op-pie { font-size: var(--t-1); }
+.op-grande .op-arte { width: 96px; height: 96px; }
+.op-grande .btn { min-height: 56px; }
+
+/* ---------- entregas y calendario ---------- */
+.ent-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 1100px) { .ent-grid { grid-template-columns: 1fr; } }
+.ent-tarde { border-color: #6b2a22; }
+.ent-tarde h3 { color: #ff9b8a; }
+.ent-cuando { display: block; color: var(--acento); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.cal-cabeza { display: flex; align-items: center; justify-content: space-between; }
+.cal-cabeza h3 { font-family: var(--f-titulo); font-size: var(--t-3); text-transform: uppercase; }
+.cal-semana, .cal-dias { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-semana span { text-align: center; font-size: 0.72rem; font-weight: 700; color: var(--tenue); }
+.cal-dia {
+  position: relative; aspect-ratio: 1; min-height: 40px; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--linea); background: var(--tarjeta);
+  cursor: pointer; font-weight: 600; transition: border-color 160ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.cal-dia:active { transform: scale(0.96); }
+.cal-dia em { position: absolute; right: 4px; bottom: 4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--acento); color: #111; font-style: normal; font-size: 0.68rem; display: grid; place-items: center; }
+.cal-dia.hoy { border-color: var(--acento); color: var(--acento); }
+.cal-dia.activo { background: var(--acento-suave); border-color: var(--acento); }
+.cal-dia.tarde em { background: #c63b2b; color: #fff; }
+.cal-detalle h4 { font-size: var(--t-1); color: var(--tinta); }
+
+/* ---------- inventario ---------- */
+.inv-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.inv-lista li { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(80px, 1fr) auto auto; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--linea); }
+.inv-nombre { display: grid; gap: 2px; }
+.inv-nombre span { color: var(--tenue); font-size: var(--t-0); }
+.inv-barra { height: 8px; border-radius: 999px; background: #262626; overflow: hidden; }
+.inv-barra span { display: block; height: 100%; border-radius: 999px; background: #6fd18a; }
+.inv-lista li.bajo .inv-barra span { background: #e0533f; }
+.inv-lista li.bajo .inv-stock { color: #ff9b8a; }
+.inv-stock { font-family: var(--f-titulo); font-size: var(--t-3); white-space: nowrap; }
+.inv-stock small { font-family: var(--f-texto); font-size: var(--t-0); color: var(--tenue); font-weight: 400; }
+b.entra { color: #7fe09a; } b.sale { color: #ff9b8a; }
+@media (max-width: 760px) {
+  .inv-lista li { grid-template-columns: minmax(0, 1fr) auto; }
+  .inv-barra { grid-column: 1 / -1; order: 3; }
+  .inv-lista .fila-btns { grid-column: 1 / -1; order: 4; }
+}
+
+/* ---------- caja y costos ---------- */
+.costos-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.costos-lista li { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--linea); }
+.costos-lista li div { display: grid; gap: 2px; min-width: 0; }
+.costos-lista li span { color: var(--tenue); font-size: var(--t-0); }
+.costo-ok { color: #7fe09a; white-space: nowrap; }
+
+/* ---------- clientes ---------- */
+.recompra { border-color: var(--acento); }
+.recompra h3 { color: var(--acento); }
+.clientes { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+.cliente-tarjeta {
+  display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; padding: 14px; border-radius: 14px; border: 1px solid var(--linea); background: var(--tarjeta); cursor: pointer;
+  transition: border-color 160ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.cliente-tarjeta:active { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) { .cliente-tarjeta:hover { border-color: #555; } }
+.cliente-ini { flex: none; width: 40px; height: 40px; border-radius: 50%; display: inline-grid; place-items: center; background: var(--acento-suave); color: var(--acento); font-weight: 800; font-size: 0.85rem; }
+.cliente-datos { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.cliente-datos span, .cliente-num span { color: var(--tenue); font-size: var(--t-0); }
+.cliente-num { display: grid; text-align: right; gap: 2px; }
+.cliente-num b { color: var(--acento); }
+.cifras-chicas { grid-template-columns: repeat(3, 1fr) !important; margin: 14px 0; }
+.cifras-chicas .cifra b { font-size: var(--t-3); }
+.artes { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.artes figure { margin: 0; display: grid; gap: 6px; }
+.artes img, .artes svg { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border-radius: 10px; }
+.artes figcaption { font-size: 0.72rem; color: var(--tenue); }
+
+/* ---------- cotizaciones ---------- */
+.cifra-accion { text-decoration: none; display: flex !important; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; border-style: dashed !important; color: var(--acento); }
+.cifra-accion b { font-size: var(--t-2) !important; font-family: var(--f-texto) !important; }
+.cot-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.cot-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px 16px; align-items: center; padding: 14px 16px; border-radius: 14px; background: var(--tarjeta); border: 1px solid var(--linea); }
+.cot-lista li .fila-btns { grid-column: 1 / -1; }
+.cot-info { display: grid; gap: 2px; min-width: 0; }
+.cot-info span { color: var(--tenue); font-size: var(--t-0); }
+.cot-total { font-family: var(--f-titulo); font-size: var(--t-3); color: var(--acento); }
+@media (max-width: 560px) { .cot-lista li { grid-template-columns: minmax(0, 1fr) auto; } .cot-lista li .estado { grid-column: 1 / -1; justify-self: start; } }
+
+/* documento de la cotización: papel blanco, listo para imprimir */
+.cot-pagina { max-width: 900px; margin: 0 auto; padding: 24px var(--gutter) 80px; display: grid; gap: 18px; }
+.cot-acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.cot-doc { background: #fff; color: #141414; border-radius: 6px; padding: clamp(20px, 5vw, 56px); display: grid; gap: 28px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); font-size: 0.92rem; }
+.cot-doc-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px; margin: calc(clamp(20px, 5vw, 56px) * -1) calc(clamp(20px, 5vw, 56px) * -1) 0; background: #0b0b0b; border-radius: 6px 6px 0 0; }
+.cot-doc-marca { display: flex; align-items: center; gap: 12px; color: var(--acento); }
+.cot-doc-sim { width: 44px; height: auto; }
+.cot-doc-marca img { height: 40px; width: auto; }
+.cot-doc-titulo { text-align: right; color: #fff; }
+.cot-doc-titulo h1 { font-family: var(--f-titulo); font-size: 2.2rem; text-transform: uppercase; color: var(--acento); }
+.cot-doc-titulo p { letter-spacing: 0.14em; font-weight: 700; }
+.cot-doc-datos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 640px) { .cot-doc-datos { grid-template-columns: 1fr; } }
+.cot-doc h2 { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #8a6d00; margin-bottom: 4px; font-family: var(--f-texto); }
+.cot-tabla { width: 100%; border-collapse: collapse; }
+.cot-tabla th { text-align: left; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555; border-bottom: 2px solid #141414; padding: 8px 6px; }
+.cot-tabla td { padding: 10px 6px; border-bottom: 1px solid #e3e0d8; vertical-align: top; }
+.cot-tabla .num { text-align: right; white-space: nowrap; }
+.cot-tabla tfoot td { font-weight: 800; font-size: 1.05rem; border-bottom: 0; padding-top: 14px; }
+.cot-tabla tfoot tr:first-child td:last-child { color: #141414; background: var(--acento); }
+.cot-tabla .cot-anticipo td { font-weight: 500; font-size: 0.9rem; color: #555; padding-top: 4px; }
+.cot-ahorro { color: #1f7a3f; font-size: 0.82rem; }
+@media (max-width: 640px) {
+  .cot-tabla thead { display: none; }
+  .cot-tabla tbody tr { display: grid; grid-template-columns: 1fr auto; padding: 8px 0; border-bottom: 1px solid #e3e0d8; }
+  .cot-tabla tbody td { border: 0; padding: 2px 0; }
+  .cot-tabla tbody td:nth-child(2) { grid-column: 1 / -1; color: #555; }
+  .cot-tabla tbody td:nth-child(3), .cot-tabla tbody td:nth-child(4) { display: none; }
+  .cot-tabla tbody td:nth-child(5) { grid-row: 1; grid-column: 2; }
+}
+.cot-doc-pie { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; color: #444; }
+@media (max-width: 640px) { .cot-doc-pie { grid-template-columns: 1fr; } }
+.cot-doc-gracias { text-align: center; color: #555; border-top: 1px dashed #ccc; padding-top: 18px; }
+@media print {
+  @page { size: letter; margin: 12mm; }
+  body { background: #fff !important; }
+  .nav, .no-imprimir, .mira, .estela-mouse, #avisos, .humo-pantalla { display: none !important; }
+  .cot-pagina { padding: 0; max-width: none; }
+  .cot-doc { box-shadow: none; padding: 0; }
+  .cot-doc-cabeza { margin: 0 0 8px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cot-tabla tfoot tr:first-child td:last-child { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ---------- diseñadores ---------- */
+.disenadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; align-items: start; }
+.dis-stats { display: grid; gap: 4px; padding: 10px 12px; border-radius: 12px; background: var(--tarjeta); font-size: var(--t-0); color: var(--tenue); }
+.dis-stats b { color: var(--tinta); }
+.tp-abajo .estado { font-size: 0.72rem; padding: 2px 8px; }
+.columna-vacia, .maq-hechas { display: flex; gap: 6px; align-items: center; }
+.op-btns { flex-wrap: nowrap; }
+.alerta-barra { display: block; line-height: 1.7; }
+.alerta-barra .ico { display: inline-block; vertical-align: -3px; margin-right: 6px; }
+
+/* máquinas ordenadas: 4 en fila en pantalla ancha, 2 × 2 en tablet, una por fila en celular */
+.maquinas, .maquinas-grandes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1399px) { .panel .maquinas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1099px) { .maquinas-grandes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .maquinas, .maquinas-grandes, .panel .maquinas { grid-template-columns: 1fr; } }
+.maq { align-self: stretch; align-content: start; }

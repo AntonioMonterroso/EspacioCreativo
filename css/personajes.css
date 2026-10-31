@@ -1,0 +1,68 @@
+/* ============================================================
+   Personajes grises: marcianito, satélite impresora, platillo
+   volador y astronauta con rodillo.
+   ============================================================ */
+.personaje { position: absolute; left: var(--x); top: var(--y); width: var(--tam); z-index: 1; pointer-events: none; }
+.personaje .pj { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45)); }
+.personaje .pj > * { transform-box: fill-box; }
+.personaje-marciano { pointer-events: auto; cursor: pointer; }
+.personaje-marciano .pj { animation: pj-flota 4.5s ease-in-out infinite alternate; }
+.personaje-satelite .pj { animation: pj-orbita 9s ease-in-out infinite alternate; }
+.personaje-platillo .pj { animation: pj-flota 3.2s ease-in-out infinite alternate; }
+.personaje-astronauta .pj { animation: pj-gira 14s ease-in-out infinite alternate; }
+@keyframes pj-flota { from { translate: 0 0; } to { translate: 0 -14px; } }
+@keyframes pj-orbita { from { rotate: -6deg; translate: 0 0; } to { rotate: 6deg; translate: 0 -12px; } }
+@keyframes pj-gira { from { rotate: -14deg; translate: 0 6px; } to { rotate: 10deg; translate: 0 -10px; } }
+
+/* marcianito: mira al puntero, parpadea y saluda */
+.mc-mira { transform: translate(var(--ox, 0px), var(--oy, 0px)); transition: transform 180ms var(--ease-out); }
+.mc-ojo { transform-origin: center; animation: parpadeo-ojo 4.6s infinite; }
+.mc-ojo:nth-child(2) { animation-delay: 30ms; }
+@keyframes parpadeo-ojo { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+.mc-luz { animation: luz 1.6s ease-in-out infinite alternate; }
+@keyframes luz { from { opacity: 0.55; } to { opacity: 1; filter: drop-shadow(0 0 6px #f5c205); } }
+.mc-antena { transform-origin: 50% 100%; animation: antena 2.2s ease-in-out infinite alternate; }
+@keyframes antena { from { rotate: -6deg; } to { rotate: 8deg; } }
+.mc-brazo { transform-origin: 0% 100%; }
+.saluda .mc-brazo { animation: saludo 520ms ease-in-out 4 alternate; }
+@keyframes saludo { from { rotate: -10deg; } to { rotate: 22deg; } }
+
+/* satélite: paneles que giran un poco y la tirita que sale impresa */
+.st-izq { transform-origin: 100% 50%; animation: panel-izq 6s ease-in-out infinite alternate; }
+.st-der { transform-origin: 0% 50%; animation: panel-der 6s ease-in-out infinite alternate; }
+@keyframes panel-izq { to { transform: scaleX(0.82); } }
+@keyframes panel-der { to { transform: scaleX(0.82); } }
+.st-papel { animation: imprime-tira 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+@keyframes imprime-tira { 0% { transform: translateY(0); } 70% { transform: translateY(96px); } 85% { transform: translateY(96px); opacity: 1; } 100% { transform: translateY(110px); opacity: 0; } }
+.st-luz, .st-led { animation: luz 0.9s ease-in-out infinite alternate; }
+
+/* platillo: luces en secuencia, rayo y la calcomanía que sube */
+.pl-luz { animation: luz 0.8s ease-in-out infinite alternate; animation-delay: calc(var(--i) * 160ms); }
+.pl-rayo { transform-origin: 50% 0; animation: rayo 2.4s ease-in-out infinite alternate; }
+@keyframes rayo { from { opacity: 0.45; transform: scaleX(0.92); } to { opacity: 1; transform: scaleX(1); } }
+.pl-botin { transform-origin: center; animation: botin 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+/* la monedita sube por el rayo hasta el platillo y vuelve a bajar */
+@keyframes botin { 0%, 8% { transform: translateY(0) rotate(0) scale(1); } 50%, 58% { transform: translateY(-104px) rotate(180deg) scale(0.62); } 100% { transform: translateY(0) rotate(360deg) scale(1); } }
+.pl-nave { transform-origin: 50% 70%; animation: ladea 3s ease-in-out infinite alternate; }
+@keyframes ladea { from { rotate: -4deg; } to { rotate: 4deg; } }
+
+/* astronauta: el rodillo pinta una franja que se dibuja y se borra */
+.as-pintura { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pinta 5s var(--ease-in-out) infinite; }
+@keyframes pinta { 0% { stroke-dashoffset: 1; } 55% { stroke-dashoffset: 0; } 80% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+.as-brazo { transform-origin: 0% 0%; animation: rodillo 2.5s ease-in-out infinite alternate; }
+@keyframes rodillo { from { rotate: -6deg; } to { rotate: 8deg; } }
+
+/* en la portada se mueven con el despegue */
+.personaje.tornasol-hero { transform: translate3d(0, calc(var(--p) * var(--vel) * -1vh), 0) rotate(calc(var(--p) * var(--rot) * 1deg)); z-index: 2; }
+.personaje.tornasol-flota { transform: translate3d(0, calc(var(--t, 0) * var(--vel) * -1px), 0) rotate(calc(var(--t, 0) * var(--rot) * 1deg)); }
+@media (max-width: 860px) {
+  .personaje-marciano.tornasol-hero { left: 4vw; top: 9vh; width: 92px; }
+  .personaje-satelite { left: 64% !important; top: 24px !important; width: 120px !important; }
+  .personaje-platillo { left: 62% !important; top: 18px !important; width: 130px !important; }
+  .personaje-astronauta { left: 74% !important; top: 3% !important; width: 88px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .personaje *, .personaje .pj { animation: none !important; }
+  .as-pintura { stroke-dashoffset: 0; }
+}
+.personaje-astronauta { z-index: 3; }

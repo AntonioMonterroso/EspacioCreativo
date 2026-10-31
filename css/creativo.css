@@ -1,0 +1,199 @@
+/* ============================================================
+   Capa creativa: tornasol 3D, cuenta regresiva, título láser,
+   materiales por sección con esquina que se despega, estela.
+   ============================================================ */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+
+/* ---------- formas tornasol (las del banner de la agencia) ---------- */
+.tornasol { position: absolute; left: var(--x); top: var(--y); width: var(--tam); aspect-ratio: 1; pointer-events: none; z-index: 1; perspective: 700px; }
+.tornasol > span {
+  --iris: conic-gradient(from var(--ang), #f5c205, #ff6aa8, #9b5cff, #33d6cf, #d8ff8a, #f5c205);
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  animation: iris 10s linear infinite, flota-t 7s ease-in-out infinite alternate;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6));
+}
+@keyframes iris { to { --ang: 360deg; } }
+@keyframes flota-t { to { translate: 0 -14px; } }
+.tornasol-dona > span {
+  background:
+    radial-gradient(circle, transparent 0 39%, rgba(0, 0, 0, 0.6) 41%, transparent 49%, rgba(255, 255, 255, 0.45) 53%, transparent 58%, rgba(0, 0, 0, 0.7) 68%),
+    var(--iris);
+  -webkit-mask: radial-gradient(circle, transparent 37%, #000 38.5%, #000 68.5%, transparent 70%);
+  mask: radial-gradient(circle, transparent 37%, #000 38.5%, #000 68.5%, transparent 70%);
+  transform: rotateX(64deg) rotateZ(calc(var(--giro) + var(--m, 0) * var(--rot) * 1deg));
+}
+.tornasol-gota > span {
+  border-radius: 0 50% 50% 50%;
+  background:
+    radial-gradient(circle at 34% 34%, rgba(255, 255, 255, 0.75) 0 5%, transparent 13%),
+    radial-gradient(circle at 62% 62%, rgba(7, 7, 7, 0.75) 0 26%, transparent 62%),
+    var(--iris);
+  transform: rotate(calc(45deg + var(--giro) + var(--m, 0) * var(--rot) * 1deg));
+}
+/* en la portada se mueven con el despegue (--p); en las secciones, con su paso por la pantalla (--t) */
+.tornasol-hero { --m: var(--p); transform: translate3d(0, calc(var(--p) * var(--vel) * -1vh), 0); }
+.tornasol-flota { --m: var(--t, 0); transform: translate3d(0, calc(var(--t, 0) * var(--vel) * -1px), 0); }
+.despegue .despegue-texto, .despegue .cohete { z-index: 2; }
+
+/* ---------- cuenta regresiva y despegue ---------- */
+.intro { position: fixed; inset: 0; z-index: 120; background: var(--fondo); display: grid; place-items: center; overflow: hidden; }
+.intro::before { content: ""; position: absolute; inset: 0; background: radial-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1.5px) 0 0 / 90px 90px, radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1.5px) 45px 30px / 130px 130px; opacity: 0.5; }
+.intro-cohete { position: absolute; left: 50%; bottom: 16vh; width: min(34vw, 210px); translate: -50% 0; color: var(--acento); }
+.intro-sim { width: 100%; height: auto; }
+.intro .sim-llama { transform-box: fill-box; transform-origin: 50% 0; transition: transform 300ms var(--ease-out); }
+.intro.tiembla-2 .sim-llama { transform: scaleY(1.6); }
+.intro.tiembla-1 .sim-llama { transform: scale(1.3, 2.4); }
+.intro.despega .sim-llama { transform: scale(1.6, 4.2); }
+.intro.tiembla-3 .intro-sim { animation: tiembla 90ms linear infinite; --amp: 1px; }
+.intro.tiembla-2 .intro-sim { --amp: 2.5px; }
+.intro.tiembla-1 .intro-sim { --amp: 4px; }
+@keyframes tiembla { 25% { transform: translate(var(--amp), calc(var(--amp) * -1)); } 50% { transform: translate(calc(var(--amp) * -1), 0); } 75% { transform: translate(0, var(--amp)); } }
+.intro.despega .intro-cohete { animation: lanza 950ms cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+@keyframes lanza { to { transform: translateY(-115vh); } }
+.intro-num { position: relative; z-index: 3; font-family: var(--f-titulo); font-weight: 900; font-size: clamp(8rem, 34vw, 22rem); line-height: 1; color: var(--acento); opacity: 0; margin-bottom: 18vh; }
+.intro-num.ver { animation: num 650ms var(--ease-out) forwards; }
+.intro-num.despegue-txt { font-size: clamp(3.4rem, 12vw, 9rem); text-transform: uppercase; color: var(--acento); text-shadow: 0 3px 0 #111, 0 0 40px rgba(0, 0, 0, 0.35); }
+.intro-num.despegue-txt.ver { animation: num-queda 500ms var(--ease-out) forwards; }
+@keyframes num { 0% { opacity: 0; transform: scale(1.12); } 25% { opacity: 1; transform: none; } 80% { opacity: 1; } to { opacity: 0; transform: scale(0.95); } }
+@keyframes num-queda { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.intro-saltar { position: absolute; z-index: 4; top: 16px; right: 16px; min-height: 44px; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--linea); background: rgba(7, 7, 7, 0.6); color: var(--tinta2); font-weight: 600; cursor: pointer; transition: transform 140ms var(--ease-out); }
+.intro-saltar:active { transform: scale(0.97); }
+body.con-intro .despegue * { animation-play-state: paused !important; }
+
+/* ---------- título grabado con láser ---------- */
+.hero-titulo .letra { display: inline-block; opacity: 0; }
+.hero-titulo.quemando .letra { animation: quema 760ms calc(var(--i) * 55ms) var(--ease-out) forwards; }
+.hero-titulo.grabado .letra { opacity: 1; animation: none; }
+@keyframes quema {
+  0% { opacity: 0; color: #fff4c9; text-shadow: 0 0 22px #ff6a3d, 0 0 6px #fff; }
+  25% { opacity: 1; }
+  100% { opacity: 1; color: inherit; text-shadow: none; }
+}
+.laser-dot {
+  position: absolute; left: 0; top: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; pointer-events: none; z-index: 3; opacity: 0;
+  background: radial-gradient(#fff 0 22%, #ffb27a 40%, rgba(255, 106, 61, 0) 72%); box-shadow: 0 0 26px 10px rgba(255, 106, 61, 0.5);
+}
+.laser-dot::before { content: ""; position: absolute; left: 50%; bottom: 50%; width: 1.5px; height: 100vh; translate: -50% 0; background: linear-gradient(transparent, rgba(255, 120, 70, 0.85)); }
+
+/* ---------- materiales: la esquina superior se despega como calcomanía ---------- */
+.material { padding-top: clamp(100px, 10vw, 140px); position: relative; clip-path: polygon(0 0, calc(100% - var(--c, 0px)) 0, 100% var(--c, 0px), 100% 100%, 0 100%); }
+.material > *:not(.doblez):not(.material-tag):not(.tornasol):not(.personaje) { position: relative; z-index: 2; }
+.doblez {
+  position: absolute; top: 0; right: 0; width: var(--c, 0px); height: var(--c, 0px); z-index: 4; pointer-events: none;
+  background: linear-gradient(225deg, transparent 50%, #fbf8f0 50%, #ddd7c9 72%, #a59e90 100%);
+  filter: drop-shadow(-8px 10px 12px rgba(0, 0, 0, 0.5));
+}
+.material-tag {
+  position: absolute; z-index: 3; top: 22px; left: max(var(--gutter), calc((100% - var(--ancho)) / 2));
+  padding: 5px 10px; border: 1px dashed currentColor; border-radius: 4px; transform: rotate(-1.5deg);
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55;
+}
+.material-vinil {
+  background:
+    linear-gradient(var(--fondo), rgba(7, 7, 7, 0) 160px),
+    linear-gradient(to top, var(--fondo), rgba(7, 7, 7, 0) 160px),
+    linear-gradient(112deg, transparent 32%, rgba(255, 255, 255, 0.05) 46%, transparent 60%),
+    radial-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1.6px) 0 0 / 6px 6px, var(--fondo);
+}
+.material-madera {
+  background:
+    linear-gradient(var(--fondo), rgba(7, 7, 7, 0) 160px),
+    linear-gradient(to top, var(--fondo), rgba(7, 7, 7, 0) 160px),
+    linear-gradient(rgba(12, 7, 3, 0.66), rgba(12, 7, 3, 0.8)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0035 0.085' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 .62 .05  0 0 0 .36 .025  0 0 0 .2 .012  0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E") 0 0 / 700px 700px, #2a170b;
+}
+.material-lona {
+  background:
+    linear-gradient(var(--fondo), rgba(7, 7, 7, 0) 160px),
+    linear-gradient(to top, var(--fondo), rgba(7, 7, 7, 0) 160px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 4px), #151410;
+}
+.material-lona::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 36px; z-index: 2; background: radial-gradient(circle, #1b1a17 0 4px, #c9c4b8 5px 7px, #77736a 8px, transparent 9px) 40px 0 / 160px 36px repeat-x; }
+.material-lona .material-tag { top: 46px; }
+.material-vidrio {
+  --tinta: #0f1416; --tinta2: #36434a; --tenue: #56646b; --linea: rgba(15, 20, 22, 0.16); --fondo2: #f1f5f6; --tarjeta: #fff;
+  color: var(--tinta); color-scheme: light;
+  background:
+    linear-gradient(118deg, transparent 18%, rgba(255, 255, 255, 0.55) 26%, transparent 34%, transparent 62%, rgba(255, 255, 255, 0.35) 68%, transparent 74%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(165deg, #e4ecef, #c4d2d7);
+}
+.material-vidrio .eyebrow { color: #6b5200; }
+.material-vidrio .paso-num { color: var(--tinta); text-shadow: 5px 5px 0 var(--acento); }
+.material-vidrio .paso-sim { filter: drop-shadow(5px 5px 0 var(--acento)); }
+.material-vidrio :focus-visible { outline-color: #0f1416; }
+.material-papel::before, .material-papel::after {
+  content: ""; position: absolute; z-index: 2; width: 34px; height: 34px; border: 0 solid rgba(0, 0, 0, 0.55);
+}
+.material-papel::before { top: 22px; left: 22px; border-width: 1.5px 0 0 1.5px; }
+.material-papel::after { bottom: 22px; right: 22px; border-width: 0 1.5px 1.5px 0; }
+.material-papel .material-tag { color: var(--acento-sobre); left: 72px; }
+.material-espacio {
+  background:
+    linear-gradient(var(--fondo), rgba(7, 7, 7, 0) 160px),
+    linear-gradient(to top, var(--fondo), rgba(7, 7, 7, 0) 160px),
+    radial-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1.4px) 0 0 / 110px 110px,
+    radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1.4px) 55px 40px / 150px 150px,
+    radial-gradient(ellipse at 80% 0%, rgba(245, 194, 5, 0.08), transparent 55%), var(--fondo);
+}
+
+/* ---------- estela del puntero ---------- */
+.estela-mouse { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 90; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tornasol > span { animation: none; }
+  .tornasol-hero, .tornasol-flota { transform: none; }
+  .material { clip-path: none; }
+  .doblez { display: none; }
+}
+@media (max-width: 860px) {
+  .tornasol-hero.tornasol-dona { left: -24vw; top: 4vh; }
+  .tornasol-hero.tornasol-gota { left: 76vw; top: 36vh; width: 70px; }
+}
+@media (max-width: 620px) { .contacto .tornasol { left: 80%; top: 1%; width: 64px; } }
+
+/* ---------- fuego en capas ---------- */
+.fuego path, .fuego-brillo { transform-box: fill-box; transform-origin: 50% 0; }
+.fuego-ext { animation: flama 130ms ease-in-out infinite alternate; }
+.fuego-med { animation: flama 100ms 40ms ease-in-out infinite alternate; }
+.fuego-int { animation: flama-int 90ms ease-in-out infinite alternate; }
+.fuego-brillo { filter: blur(10px); animation: brillo-f 170ms ease-in-out infinite alternate; }
+.chispa { opacity: 0; animation: chispa 760ms linear infinite; animation-delay: calc(var(--i) * -127ms); }
+@keyframes flama { to { transform: scale(0.9, 1.13) skewX(3deg); } }
+@keyframes flama-int { to { transform: scale(0.82, 1.16); } }
+@keyframes brillo-f { to { opacity: 0.85; transform: scale(1.18); } }
+@keyframes chispa { 0% { opacity: 1; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(var(--dx), 64px); } }
+
+/* ---------- humo (intro y portada) ---------- */
+.bocanada {
+  position: absolute; left: var(--x); bottom: 6vh; width: 150px; height: 150px; margin-left: -75px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 44% 40%, rgba(244, 240, 232, 0.92), rgba(226, 220, 210, 0.7) 30%, rgba(206, 200, 190, 0.36) 50%, rgba(190, 184, 174, 0.12) 62%, transparent 71%);
+  opacity: 0; transform: scale(0.95) rotate(var(--g));
+}
+.intro-humo { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.intro-cohete { z-index: 1; }
+.intro.tiembla-2 .bocanada, .intro.tiembla-1 .bocanada {
+  opacity: 0.75; transform: translate(calc(var(--dx) * 0.07), -2vh) scale(1.7) rotate(var(--g));
+  transition: transform 1300ms var(--ease-out) calc(var(--i) * 30ms), opacity 600ms var(--ease-out);
+}
+.intro.despega .bocanada {
+  opacity: 0.97; transform: translate(var(--dx), var(--dy)) scale(var(--s)) rotate(var(--g));
+  transition: transform 1250ms var(--ease-out) calc(var(--i) * 22ms), opacity 400ms var(--ease-out);
+}
+.intro.sale { background: transparent; pointer-events: none; }
+.intro.sale::before, .intro.sale .intro-cohete, .intro.sale .intro-saltar { opacity: 0; transition: opacity 200ms; }
+.intro.sale .intro-num { animation: sale-num 260ms var(--ease-out) forwards; }
+@keyframes sale-num { from { opacity: 1; } to { opacity: 0; transform: scale(1.06); } }
+.intro.sale .bocanada {
+  opacity: 0; transform: translate(calc(var(--dx) * 1.35), calc(var(--dy) - 18vh)) scale(calc(var(--s) * 1.35)) rotate(calc(var(--g) + 30deg));
+  transition: transform 1600ms var(--ease-out) calc(var(--i) * 20ms), opacity 1400ms ease-out calc(var(--i) * 20ms);
+}
+/* --h: el humo crece mientras el cohete sube · --l: se disipa (sigue subiendo y se abre) sobre los servicios */
+.humo-pantalla { position: fixed; inset: 0; z-index: 45; pointer-events: none; visibility: hidden; --h: 0; --l: 0; }
+.humo-pantalla.activo { visibility: visible; }
+.humo-pantalla .bocanada {
+  bottom: -6vh; opacity: calc(var(--h) * (1 - var(--l)) * 0.97);
+  transform: translate(calc(var(--dx) * (var(--h) + var(--l) * 0.4)), calc(var(--dy) * var(--h) - var(--l) * 35vh)) scale(calc((1 + (var(--s) - 1) * var(--h)) * (1 + var(--l) * 0.7))) rotate(calc(var(--g) + var(--l) * 40deg));
+}
+@media (min-width: 861px) { .humo-pantalla .bocanada { left: calc(var(--x) + 22%); } }

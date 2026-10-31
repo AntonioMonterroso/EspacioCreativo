@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070707">
+<title>Propuesta · Espacio Creativo</title>
+<meta name="description" content="Propuesta de Monterroso Dev Studio para Espacio Creativo: página, cotizador, seguimiento de pedidos y sistema de taller.">
+<meta property="og:title" content="Propuesta para Espacio Creativo">
+<meta property="og:description" content="Su marca ya despega. Ahora el negocio también.">
+<meta property="og:image" content="https://antoniomonterroso.github.io/EspacioCreativo/img/logo-original.jpg">
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Sora:wght@300..800&display=swap">
+<style>
+:root {
+  --fondo: #070707; --fondo2: #111; --tarjeta: #161616; --linea: #2a2a2a; --tinta: #f6f4ee; --tinta2: #b9b5ab; --tenue: #8a867d;
+  --acento: #f5c205; --acento-suave: #3a2f06; --sobre: #0b0b0b;
+  --f-titulo: "Barlow Condensed", "Arial Narrow", sans-serif; --f-texto: "Sora", "Helvetica Neue", sans-serif;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); --gutter: clamp(16px, 4vw, 48px); --ancho: 1180px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; overflow-x: clip; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+:focus-visible { outline: 3px solid var(--acento); outline-offset: 3px; border-radius: 6px; }
+.ico { width: 1.15em; height: 1.15em; flex: none; }
+.acento { color: var(--acento); }
+.eyebrow { font-size: .8rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--acento); }
+.titulo { font-family: var(--f-titulo); font-weight: 900; text-transform: uppercase; font-size: clamp(2.4rem, 1.6rem + 3.6vw, 4.8rem); line-height: .92; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 12px 22px; border-radius: 999px; border: 1.5px solid transparent; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; background: none; color: var(--tinta); transition: transform 140ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out); }
+.btn:active { transform: scale(.97); }
+.btn-acento { background: var(--acento); color: var(--sobre); }
+.btn-linea { border-color: #555; }
+@media (hover: hover) and (pointer: fine) { .btn-acento:hover { background: #ffd336; } .btn-linea:hover { border-color: var(--acento); color: var(--acento); } }
+.sec { padding: clamp(72px, 10vw, 130px) max(var(--gutter), calc((100% - var(--ancho)) / 2)); position: relative; }
+.sec-cabeza { display: grid; gap: 14px; max-width: 780px; margin-bottom: clamp(32px, 5vw, 56px); }
+.sec-cabeza p:not(.eyebrow) { color: var(--tinta2); font-size: 1.1rem; }
+.num { font-family: var(--f-titulo); font-weight: 800; color: var(--tenue); letter-spacing: .1em; }
+.revela { opacity: 0; transform: translateY(22px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms); }
+.revela.visto { opacity: 1; transform: none; }
+
+/* barra */
+.barra { position: fixed; inset: 0 0 auto; z-index: 50; display: flex; align-items: center; gap: 14px; padding: 12px var(--gutter); background: rgba(7,7,7,.86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--linea); }
+.barra-firma { display: flex; align-items: center; gap: 10px; margin-right: auto; text-decoration: none; font-weight: 700; font-size: .9rem; }
+.barra-firma img { width: 34px; height: 34px; object-fit: contain; filter: brightness(0) invert(1); }
+.barra nav { display: flex; gap: 4px; }
+.barra nav a { padding: 8px 10px; font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; color: var(--tinta2); }
+@media (max-width: 980px) { .barra nav { display: none; } }
+.barra .btn { white-space: nowrap; }
+@media (max-width: 460px) { .barra-firma span { display: none; } }
+
+/* portada */
+.portada { min-height: 100dvh; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding-top: 110px; overflow: hidden; }
+.portada::before { content: ""; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.5) 1px, transparent 1.4px) 0 0/110px 110px, radial-gradient(rgba(255,255,255,.25) 1px, transparent 1.4px) 55px 40px/150px 150px; opacity: .5; pointer-events: none; }
+.portada-texto { position: relative; display: grid; gap: 22px; }
+.portada-para { display: flex; align-items: center; gap: 14px; color: var(--tinta2); font-size: .9rem; }
+.portada-para img { height: 34px; width: auto; }
+.portada .titulo { font-size: clamp(3rem, 2rem + 5vw, 6.6rem); }
+.portada-texto > p { color: var(--tinta2); font-size: 1.15rem; max-width: 50ch; }
+.portada-cohete { position: relative; color: var(--acento); justify-self: center; width: min(80vw, 420px); }
+.portada-cohete svg { width: 100%; overflow: visible; animation: flota 4s ease-in-out infinite alternate; filter: drop-shadow(0 0 40px rgba(245,194,5,.25)); }
+.portada-cohete .lazo { stroke-dasharray: 1; stroke-dashoffset: 1; animation: dibuja 1.8s var(--ease-out) both; }
+.portada-cohete .lazo:nth-child(2) { animation-delay: .18s; } .portada-cohete .lazo:nth-child(3) { animation-delay: .36s; }
+.portada-cohete .llama { transform-box: fill-box; transform-origin: 50% 0; animation: llama .12s ease-in-out infinite alternate; }
+@keyframes dibuja { from { opacity: 0; } 6% { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes flota { to { translate: 0 -12px; } }
+@keyframes llama { to { transform: scale(.9, 1.14); } }
+@media (max-width: 860px) { .portada { grid-template-columns: 1fr; } .portada-cohete { order: -1; width: min(52vw, 230px); } }
+
+/* problema */
+.problemas { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.problema { padding: 22px; border-radius: 18px; background: var(--tarjeta); border: 1px solid var(--linea); display: grid; gap: 8px; }
+.problema b { font-family: var(--f-titulo); font-size: 1.5rem; text-transform: uppercase; line-height: 1; }
+.problema span { color: var(--tinta2); font-size: .95rem; }
+.problema .ico { color: #ff8a7a; width: 26px; height: 26px; }
+
+/* solución */
+.piezas { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.pieza { padding: 24px; border-radius: 20px; background: var(--tarjeta); border: 1px solid var(--linea); display: grid; gap: 10px; align-content: start; }
+.pieza .ico { width: 30px; height: 30px; color: var(--acento); }
+.pieza h3 { font-family: var(--f-titulo); font-size: 1.7rem; text-transform: uppercase; }
+.pieza ul { margin: 0; padding-left: 18px; color: var(--tinta2); font-size: .95rem; display: grid; gap: 4px; }
+
+/* pruébalo */
+.aparatos { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 28px; align-items: start; }
+.cel { width: 330px; height: 660px; border-radius: 46px; padding: 12px; background: #1e1e1e; box-shadow: 0 0 0 2px #3a3a3a, 0 30px 70px rgba(0,0,0,.6); position: relative; }
+.cel::before { content: ""; position: absolute; z-index: 2; left: 50%; top: 20px; width: 90px; height: 26px; margin-left: -45px; border-radius: 20px; background: #000; }
+.cel iframe, .lap iframe { width: 100%; height: 100%; border: 0; border-radius: 36px; background: var(--fondo); }
+.lap { height: 660px; border-radius: 16px; padding: 10px; background: #1e1e1e; box-shadow: 0 0 0 2px #3a3a3a, 0 30px 70px rgba(0,0,0,.6); }
+.lap iframe { border-radius: 8px; }
+.aparatos-pie { margin-top: 18px; color: var(--tinta2); display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+@media (max-width: 1000px) { .aparatos { grid-template-columns: 1fr; justify-items: center; } .lap { width: 100%; height: 560px; } }
+@media (max-width: 420px) { .cel { width: 290px; height: 590px; } }
+
+/* comparativa */
+.comparar { width: 100%; border-collapse: collapse; background: var(--tarjeta); border-radius: 20px; overflow: hidden; }
+.comparar th, .comparar td { padding: 14px 16px; border-bottom: 1px solid var(--linea); text-align: center; }
+.comparar th:first-child, .comparar td:first-child { text-align: left; }
+.comparar thead th { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta2); }
+.comparar thead th:last-child { color: var(--sobre); background: var(--acento); }
+.comparar td:last-child { background: rgba(245,194,5,.07); }
+.si { color: #7fe09a; font-weight: 800; } .no { color: #6d6a64; }
+@media (max-width: 720px) {
+  .comparar thead { display: none; }
+  .comparar tr { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--linea); }
+  .comparar td { border: 0; padding: 6px 10px; font-size: .85rem; }
+  .comparar td:first-child { grid-column: 1 / -1; font-weight: 700; padding-top: 14px; }
+  .comparar td:not(:first-child)::before { content: attr(data-col); display: block; font-size: .68rem; color: var(--tenue); text-transform: uppercase; letter-spacing: .08em; }
+}
+
+/* calculadora */
+.calc { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; padding: clamp(22px, 4vw, 36px); border-radius: 24px; background: var(--tarjeta); border: 1px solid var(--linea); }
+.calc label { display: grid; gap: 8px; font-weight: 600; color: var(--tinta2); }
+.calc output { font-family: var(--f-titulo); font-size: 1.6rem; color: var(--tinta); }
+.calc input[type=range] { width: 100%; accent-color: var(--acento); min-height: 32px; }
+.calc-campos { display: grid; gap: 18px; }
+.calc-res { display: grid; gap: 8px; padding: 22px; border-radius: 18px; background: var(--acento); color: var(--sobre); }
+.calc-res b { font-family: var(--f-titulo); font-size: clamp(2.6rem, 2rem + 3vw, 4rem); line-height: 1; }
+@media (max-width: 760px) { .calc { grid-template-columns: 1fr; } }
+
+/* paquetes */
+.iva { display: inline-flex; gap: 10px; align-items: center; margin-top: 6px; color: var(--tinta2); cursor: pointer; }
+.iva input { width: 22px; height: 22px; accent-color: var(--acento); }
+.paquetes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
+@media (max-width: 1100px) { .paquetes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .paquetes { grid-template-columns: 1fr; } }
+.paquete { position: relative; display: grid; gap: 14px; align-content: start; padding: 24px; border-radius: 22px; background: var(--tarjeta); border: 1px solid var(--linea); }
+.paquete.reco { border-color: var(--acento); box-shadow: 0 0 0 1px var(--acento), 0 20px 50px rgba(245,194,5,.1); }
+.paquete .etiqueta { position: absolute; top: -12px; left: 20px; padding: 3px 12px; border-radius: 999px; background: var(--acento); color: var(--sobre); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.paquete h3 { font-family: var(--f-titulo); font-size: 2rem; text-transform: uppercase; }
+.paquete .para { color: var(--tinta2); font-size: .9rem; }
+.precio { display: grid; gap: 2px; }
+.precio b { font-family: var(--f-titulo); font-size: 2.4rem; color: var(--acento); line-height: 1; }
+.precio span { color: var(--tinta2); font-size: .9rem; }
+.paquete ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: .92rem; }
+.paquete li { display: flex; gap: 8px; align-items: flex-start; }
+.paquete li .ico { color: var(--acento); margin-top: 3px; }
+.incluye { margin-top: 20px; color: var(--tinta2); display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.incluye span { display: inline-flex; gap: 6px; align-items: center; }
+.incluye .ico { color: #7fe09a; }
+
+/* arma tu plan */
+.plan { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: start; }
+@media (max-width: 900px) { .plan { grid-template-columns: 1fr; } }
+.plan-op { display: grid; gap: 22px; }
+.plan-op fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; }
+.plan-op legend { font-weight: 700; margin-bottom: 10px; }
+.opcion { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 14px; border: 1.5px solid var(--linea); cursor: pointer; transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out); }
+.opcion:has(input:checked) { border-color: var(--acento); background: var(--acento-suave); }
+.opcion:has(input:focus-visible) { outline: 3px solid var(--acento); outline-offset: 2px; }
+.opcion input { width: 20px; height: 20px; accent-color: var(--acento); flex: none; }
+.opcion span { flex: 1; display: grid; }
+.opcion small { color: var(--tenue); }
+.opcion b { white-space: nowrap; color: var(--acento); }
+.resumen { position: sticky; top: 90px; padding: 24px; border-radius: 22px; background: var(--tarjeta); border: 1px solid var(--acento); display: grid; gap: 12px; }
+.resumen h3 { font-family: var(--f-titulo); font-size: 1.8rem; text-transform: uppercase; }
+.resumen dl { margin: 0; display: grid; gap: 8px; }
+.resumen dl div { display: flex; justify-content: space-between; gap: 10px; color: var(--tinta2); }
+.resumen dd { margin: 0; color: var(--tinta); font-weight: 700; }
+.resumen .total { padding-top: 10px; border-top: 1px solid var(--linea); color: var(--tinta); }
+.resumen .total dd { color: var(--acento); font-family: var(--f-titulo); font-size: 1.8rem; }
+@media (max-width: 900px) { .resumen { position: static; } }
+
+/* arranque */
+.pasos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--linea); }
+.pasos li { padding: 26px 22px 6px 0; display: grid; gap: 8px; align-content: start; }
+.pasos li + li { padding-left: 22px; border-left: 1px solid var(--linea); }
+.pasos b { font-family: var(--f-titulo); font-size: 3.2rem; color: var(--acento); line-height: 1; }
+.pasos h3 { font-family: var(--f-titulo); font-size: 1.5rem; text-transform: uppercase; }
+.pasos p { color: var(--tinta2); font-size: .95rem; }
+@media (max-width: 860px) { .pasos { grid-template-columns: 1fr 1fr; } .pasos li + li { border-left: 0; padding-left: 0; } .pasos li { border-bottom: 1px solid var(--linea); padding-bottom: 20px; } }
+@media (max-width: 520px) { .pasos { grid-template-columns: 1fr; } }
+
+/* dudas */
+.dudas { display: grid; gap: 10px; max-width: 860px; }
+.dudas details { border-radius: 16px; background: var(--tarjeta); border: 1px solid var(--linea); }
+.dudas summary { cursor: pointer; padding: 18px 20px; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.dudas summary::-webkit-details-marker { display: none; }
+.dudas summary::after { content: "+"; color: var(--acento); font-size: 1.4rem; line-height: 1; transition: transform 200ms var(--ease-out); }
+.dudas details[open] summary::after { transform: rotate(45deg); }
+.dudas details p { padding: 0 20px 20px; color: var(--tinta2); }
+
+/* cierre */
+.cierre { text-align: left; display: grid; gap: 24px; justify-items: start; }
+.cierre .titulo { font-size: clamp(3.4rem, 2rem + 6vw, 7.5rem); }
+.firma { display: flex; align-items: center; gap: 14px; color: var(--tinta2); }
+.firma img { width: 56px; height: 56px; object-fit: contain; filter: brightness(0) invert(1); }
+.firma b { display: block; color: var(--tinta); }
+.pie { padding: 26px var(--gutter) 40px; border-top: 1px solid var(--linea); color: var(--tenue); font-size: .85rem; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .revela { opacity: 1; transform: none; } .portada-cohete .lazo { stroke-dashoffset: 0; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="barra">
+  <a class="barra-firma" href="#portada"><img src="img/firma-m.png" alt=""><span>Monterroso Dev Studio</span></a>
+  <nav aria-label="Secciones">
+    <a href="#solucion">Qué incluye</a><a href="#pruebalo">Pruébalo</a><a href="#paquetes">Paquetes</a><a href="#plan">Arma tu plan</a><a href="#dudas">Dudas</a>
+  </nav>
+  <a class="btn btn-acento" href="#plan">Armar mi plan</a>
+</header>
+
+<main>
+  <section class="sec portada" id="portada">
+    <div class="portada-texto">
+      <p class="portada-para">Propuesta para <img src="img/letras.png" alt="Espacio Creativo"></p>
+      <h1 class="titulo">Su marca ya despega.<br><span class="acento">Ahora el negocio también.</span></h1>
+      <p>Una página que vende sola, un cotizador que cobra el mayoreo sin que nadie haga cuentas y un sistema de taller que sabe qué máquina hace qué, cuánto material queda y quién debe.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px"><a class="btn btn-acento" href="#pruebalo">Verlo funcionando</a><a class="btn btn-linea" href="#paquetes">Ver paquetes</a></div>
+    </div>
+    <div class="portada-cohete" aria-hidden="true">
+      <svg viewBox="-135 -150 270 300"><g fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="round" stroke-linejoin="round" id="lazos"></g>
+        <circle cx="0" cy="-74" r="9" fill="currentColor"/><circle cx="0" cy="-16" r="9" fill="currentColor"/>
+        <g class="llama"><path d="M0 50 C-24 68 -25 100 0 140 C25 100 24 68 0 50Z" fill="#ff6a1a"/><path d="M0 54 C-16 68 -17 94 0 120 C17 94 16 68 0 54Z" fill="#ffc53a"/><path d="M0 56 C-8 66 -9 82 0 98 C9 82 8 66 0 56Z" fill="#fff6d6"/></g></svg>
+    </div>
+  </section>
+
+  <section class="sec" id="problema">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">01</span> · Lo de todos los días</p><h2 class="titulo">Donde se pierde<br>el tiempo y la plata.</h2></header>
+    <div class="problemas" id="problemas"></div>
+  </section>
+
+  <section class="sec" id="solucion" style="background:#0c0c0c">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">02</span> · La solución</p><h2 class="titulo">Cuatro piezas.<br><span class="acento">Una sola nave.</span></h2><p>Todo hecho con su logo, sus colores y su forma de trabajar. Nada de plantillas.</p></header>
+    <div class="piezas" id="piezas"></div>
+  </section>
+
+  <section class="sec" id="pruebalo">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">03</span> · Pruébalo</p><h2 class="titulo">Pide en el celular.<br>Míralo llegar al panel.</h2><p>Esto es el sistema de verdad, no un video. Cotice unas agendas en el celular y vea cómo aparece el pedido en el panel de la derecha.</p></header>
+    <div class="aparatos revela">
+      <div class="cel"><iframe title="Página para el cliente" src="index.html#/" loading="lazy"></iframe></div>
+      <div class="lap"><iframe title="Panel de la agencia" src="index.html#/panel" loading="lazy"></iframe></div>
+    </div>
+    <p class="aparatos-pie">Ábralo en grande: <a class="btn btn-linea" href="index.html#/" target="_blank" rel="noopener">La página</a> <a class="btn btn-linea" href="index.html#/panel" target="_blank" rel="noopener">El panel (PIN 0000)</a> <a class="btn btn-linea" href="index.html#/taller" target="_blank" rel="noopener">Modo taller</a></p>
+  </section>
+
+  <section class="sec" id="comparativa" style="background:#0c0c0c">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">04</span> · Comparado</p><h2 class="titulo">Contra lo de siempre.</h2></header>
+    <table class="comparar revela" id="comparar"></table>
+  </section>
+
+  <section class="sec" id="calculadora">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">05</span> · Haga la cuenta</p><h2 class="titulo">¿Cuánto cuesta<br>cotizar a mano?</h2></header>
+    <div class="calc revela">
+      <div class="calc-campos">
+        <label>Cotizaciones a la semana <output id="o-cot">40</output><input type="range" id="c-cot" min="5" max="150" value="40"></label>
+        <label>Minutos por cotización (medir, calcular, mandar foto) <output id="o-min">15</output><input type="range" id="c-min" min="3" max="45" value="15"></label>
+        <label>Ticket promedio de un pedido <output id="o-tic">Q450</output><input type="range" id="c-tic" min="100" max="3000" step="50" value="450"></label>
+      </div>
+      <div class="calc-res" aria-live="polite"><span>Al mes se van</span><b id="r-horas">43 horas</b><span>en cotizar. Si por tardar se pierde 1 de cada 10 cotizaciones, son <strong id="r-plata">Q7,740</strong> al mes que se van a otra imprenta.</span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="paquetes" style="background:#0c0c0c">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">06</span> · Paquetes</p><h2 class="titulo">Escoja hasta dónde<br>quiere llegar.</h2>
+      <label class="iva"><input type="checkbox" id="iva"> Mostrar con IVA (12%)</label></header>
+    <div class="paquetes" id="lista-paquetes"></div>
+    <p class="incluye revela" id="incluye"></p>
+  </section>
+
+  <section class="sec" id="plan">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">07</span> · Arme su plan</p><h2 class="titulo">Su plan,<br><span class="acento">a su medida.</span></h2></header>
+    <div class="plan revela">
+      <form class="plan-op" id="plan-form">
+        <fieldset><legend>Paquete</legend><div id="plan-paquetes" style="display:grid;gap:10px"></div></fieldset>
+        <fieldset><legend>Extras</legend><div id="plan-extras" style="display:grid;gap:10px"></div></fieldset>
+      </form>
+      <aside class="resumen" aria-live="polite"><h3>Su plan</h3><dl id="resumen"></dl>
+        <a class="btn btn-acento" id="plan-wa" target="_blank" rel="noopener">Mandar mi plan por WhatsApp</a>
+        <p style="color:var(--tenue);font-size:.85rem">Precios en quetzales. Propuesta válida por 15 días.</p></aside>
+    </div>
+  </section>
+
+  <section class="sec" id="arranque" style="background:#0c0c0c">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">08</span> · Cómo arrancamos</p><h2 class="titulo">Cuenta regresiva.</h2></header>
+    <ol class="pasos revela" id="pasos"></ol>
+  </section>
+
+  <section class="sec" id="dudas">
+    <header class="sec-cabeza revela"><p class="eyebrow"><span class="num">09</span> · Dudas</p><h2 class="titulo">Lo que siempre<br>preguntan.</h2></header>
+    <div class="dudas" id="lista-dudas"></div>
+  </section>
+
+  <section class="sec cierre" id="cierre">
+    <p class="eyebrow"><span class="num">10</span> · Despegue</p>
+    <h2 class="titulo">¿Despegamos?</h2>
+    <a class="btn btn-acento" id="cierre-wa" target="_blank" rel="noopener">Escribirme por WhatsApp</a>
+    <div class="firma"><img src="img/firma-m.png" alt="M de Monterroso"><span><b>Antonio Monterroso</b>Monterroso Dev Studio · +502 3764 5139</span></div>
+  </section>
+</main>
+<footer class="pie">Monterroso Dev Studio · Propuesta para Espacio Creativo, Retalhuleu · Válida por 15 días · Precios en quetzales, sin IVA salvo que se marque lo contrario.</footer>
+
+<script>
+"use strict";
+/* el panel de la demo se abre ya con el rol de dueño para que se pueda probar aquí mismo */
+try { sessionStorage.setItem("espacio.creativo.rol", "dueno"); sessionStorage.setItem("espacio.creativo.intro", "1"); } catch (e) {}
+const WA = "50237645139";
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const Q = n => "Q" + Math.round(n).toLocaleString("en-US");
+const ico = p => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const OK = ico('<path d="M20 6 9 17l-5-5"/>'), X = ico('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>');
+
+/* cohete de la portada (mismo trazo del logo) */
+function lazo(l, a, w) { const c = (l + a) / 2, r = (c * c + w * w) / (2 * w); return `M0 ${a} A${r} ${r} 0 0 1 0 ${-l} A${r} ${r} 0 0 1 0 ${a}Z`; }
+$("#lazos").innerHTML = [[124, 0], [112, 120], [112, 240]].map(([l, g]) => `<path class="lazo" pathLength="1" d="${lazo(l, 46, 37)}" transform="rotate(${g})"/>`).join("");
+
+const PROBLEMAS = [
+  ["Cotizar a mano", "Medir, multiplicar por el metro, acordarse del descuento de mayoreo y mandarlo por WhatsApp. Cada vez."],
+  ["Pruebas perdidas en el chat", "La foto de la prueba se pierde entre audios. Luego «yo no aprobé eso»."],
+  ["«¿Ya está mi pedido?»", "La misma pregunta veinte veces al día, por teléfono y por WhatsApp."],
+  ["Nadie sabe qué sigue", "¿Qué va en el plotter? ¿Qué falta en el láser? Todo está en la cabeza de alguien."],
+  ["Se acabó el vinil", "Se nota cuando ya no hay, con el pedido encima y el cliente esperando."],
+  ["¿Ganamos o no?", "Se vende, pero no se sabe cuánto deja cada pedido después del material."]
+];
+$("#problemas").innerHTML = PROBLEMAS.map(([t, x], i) => `<article class="problema revela" style="--i:${i}">${X}<b>${t}</b><span>${x}</span></article>`).join("");
+
+const PIEZAS = [
+  ['<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>', "La página que vende", ["Cuenta regresiva, cohete y humo al abrir", "Servicios como planetas, con su animación", "«Grábalo tú»: ven su nombre grabado en la agenda", "Probador: la manta encima de la foto de su local", "Portafolio y reseñas que administra la agencia"]],
+  ['<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>', "Cotizador y seguimiento", ["Precio al momento, con el mayoreo aplicado solo", "El cliente sube su logo o pide el diseño", "Código para seguir el pedido paso a paso", "Aprueba la prueba o pide cambios con un botón", "Cotización formal en PDF lista para mandar"]],
+  ['<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>', "Panel de la agencia", ["Pedidos por estado y avisos por WhatsApp listos", "Clientes con su historial y aviso de recompra", "Caja del día, cierre y ganancia por pedido", "Carga de cada diseñador", "PIN por rol: dueño, diseño y taller"]],
+  ['<path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/>', "Taller", ["Una cola por máquina: gran formato, plotter, láser, impresora", "Modo taller en tablet o TV con botones grandes", "El material se descuenta solo al terminar", "Aviso cuando algo se está acabando", "Calendario de entregas y atrasados"]]
+];
+$("#piezas").innerHTML = PIEZAS.map(([p, t, xs], i) => `<article class="pieza revela" style="--i:${i}">${ico(p)}<h3>${t}</h3><ul>${xs.map(x => `<li>${x}</li>`).join("")}</ul></article>`).join("");
+
+const COLS = ["WhatsApp y cuaderno", "Plataforma extranjera", "Espacio Creativo"];
+const FILAS = [
+  ["Cotiza solo, con mayoreo", 0, 1, 1], ["El cliente aprueba la prueba con un botón", 0, 1, 1], ["Con su marca, colores y animaciones", 0, 0, 1],
+  ["«Grábalo tú» y probador en la fachada", 0, 0, 1], ["Cola por máquina y modo taller", 0, 0, 1], ["Material que se descuenta solo", 0, 0, 1],
+  ["Precio en quetzales, sin comisión por venta", 1, 0, 1], ["Soporte en Guatemala, por WhatsApp", 1, 0, 1]
+];
+$("#comparar").innerHTML = `<thead><tr><th>Qué</th>${COLS.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>${FILAS.map(([t, ...v]) => `<tr><td>${t}</td>${v.map((x, i) => `<td data-col="${COLS[i]}" class="${x ? "si" : "no"}">${x ? OK : "—"}<span class="sr">${x ? "sí" : "no"}</span></td>`).join("")}</tr>`).join("")}</tbody>`;
+
+/* calculadora */
+function calc() {
+  const c = +$("#c-cot").value, m = +$("#c-min").value, t = +$("#c-tic").value;
+  $("#o-cot").textContent = c; $("#o-min").textContent = m; $("#o-tic").textContent = Q(t);
+  $("#r-horas").textContent = Math.round(c * m * 4.33 / 60) + " horas";
+  $("#r-plata").textContent = Q(c * 4.33 * 0.1 * t);
+}
+["#c-cot", "#c-min", "#c-tic"].forEach(s => $(s).addEventListener("input", calc)); calc();
+
+/* paquetes */
+const PAQ = [
+  { id: "esencial", n: "Esencial", para: "Para vender en línea desde ya.", ini: 2500, mes: 750, x: ["Página con todas las animaciones", "«Grábalo tú» y probador en la fachada", "Cotizador con mayoreo y seguimiento", "Aprobación de pruebas por link", "Panel de pedidos y avisos por WhatsApp", "Portafolio y reseñas"] },
+  { id: "pro", n: "Pro", para: "La página y todo el taller.", ini: 6500, mes: 1500, reco: true, x: ["Todo lo de Esencial", "Producción por máquina y modo taller", "Inventario que se descuenta solo", "Entregas y calendario", "Caja, cierre y ganancia por pedido", "Clientes, recompra y cotización PDF", "Diseñadores y PIN por rol"] },
+  { id: "total", n: "Total", para: "Para crecer sin techo.", ini: 12000, mes: 2500, x: ["Todo lo de Pro", "Facturación FEL conectada (certificador aparte)", "Dominio propio incluido", "Varias sucursales o bodegas", "Reporte mensual en PDF", "Capacitación presencial y soporte prioritario"] },
+  { id: "compra", n: "Compra única", para: "El sistema queda a su nombre.", ini: 30000, iniMax: 38000, mes: 600, x: ["Pro o Total, con el código a su nombre", "Instalación y capacitación", "3 meses de ajustes incluidos", "Q600 al mes solo por hosting y mantenimiento"] }
+];
+const EXTRAS = [
+  { id: "dominio", n: "Dominio propio (.com)", d: "Su dirección web, por ejemplo espaciocreativo.com", anual: 85, no: ["total"] },
+  { id: "fel", n: "Facturación FEL", d: "Conectada a su certificador (su costo es aparte)", mes: 350, no: ["total"] },
+  { id: "carga", n: "Carga de su lista de precios y clientes", d: "Pasamos lo que hoy tiene en Excel o cuaderno", ini: 400 },
+  { id: "capa", n: "Capacitación extra", d: "Una sesión más con el equipo, presencial", ini: 350 }
+];
+const iva = () => $("#iva").checked ? 1.12 : 1;
+function pintarPaquetes() {
+  const k = iva();
+  $("#lista-paquetes").innerHTML = PAQ.map((p, i) => `<article class="paquete revela visto ${p.reco ? "reco" : ""}" style="--i:${i}">${p.reco ? `<span class="etiqueta">Recomendado</span>` : ""}
+    <h3>${p.n}</h3><p class="para">${p.para}</p>
+    <div class="precio"><b>${Q(p.ini * k)}${p.iniMax ? "–" + Q(p.iniMax * k).slice(1) : ""}</b><span>${p.iniMax ? "una sola vez" : "de arranque"} + <strong>${Q(p.mes * k)}</strong> al mes</span></div>
+    <ul>${p.x.map(x => `<li>${OK}<span>${x}</span></li>`).join("")}</ul></article>`).join("");
+  $("#incluye").innerHTML = ["Datos en la nube: todos ven lo mismo", "Con su marca", "Sin comisión por venta", "Respaldo diario", "Cambios menores incluidos"].map(x => `<span>${OK}${x}</span>`).join("");
+}
+$("#iva").addEventListener("change", () => { pintarPaquetes(); resumen(); });
+
+/* arme su plan */
+$("#plan-paquetes").innerHTML = PAQ.map(p => `<label class="opcion"><input type="radio" name="paq" value="${p.id}" ${p.reco ? "checked" : ""}><span><strong>${p.n}</strong><small>${p.para}</small></span><b>${Q(p.ini)}${p.iniMax ? "+" : ""} + ${Q(p.mes)}/mes</b></label>`).join("");
+$("#plan-extras").innerHTML = EXTRAS.map(e => `<label class="opcion" data-extra="${e.id}"><input type="checkbox" name="extra" value="${e.id}"><span><strong>${e.n}</strong><small>${e.d}</small></span><b>${e.ini ? Q(e.ini) + " una vez" : e.mes ? "+" + Q(e.mes) + "/mes" : Q(e.anual) + "/año"}</b></label>`).join("");
+function resumen() {
+  const k = iva(), f = $("#plan-form"), p = PAQ.find(x => x.id === f.paq.value);
+  const extras = [...f.querySelectorAll("input[name=extra]:checked")].map(i => EXTRAS.find(e => e.id === i.value)).filter(e => !(e.no || []).includes(p.id));
+  document.querySelectorAll("[data-extra]").forEach(l => { const e = EXTRAS.find(x => x.id === l.dataset.extra); l.hidden = (e.no || []).includes(p.id); });
+  const ini = p.ini + extras.reduce((s, e) => s + (e.ini || 0), 0), mes = p.mes + extras.reduce((s, e) => s + (e.mes || 0), 0), anual = extras.reduce((s, e) => s + (e.anual || 0), 0);
+  $("#resumen").innerHTML = `<div><dt>Paquete</dt><dd>${p.n}</dd></div>${extras.map(e => `<div><dt>${e.n}</dt><dd>${e.ini ? Q(e.ini * k) : e.mes ? "+" + Q(e.mes * k) + "/mes" : Q(e.anual * k) + "/año"}</dd></div>`).join("")}
+    <div class="total"><dt>${p.iniMax ? "Pago único" : "Arranque"}</dt><dd>${Q(ini * k)}${p.iniMax ? "–" + Q((ini - p.ini + p.iniMax) * k).slice(1) : ""}</dd></div>
+    <div class="total"><dt>Al mes</dt><dd>${Q(mes * k)}</dd></div>${anual ? `<div><dt>Al año</dt><dd>${Q(anual * k)}</dd></div>` : ""}
+    <div><dt>${k > 1 ? "Con IVA" : "Sin IVA"}</dt><dd></dd></div>`;
+  const txt = `Hola Antonio, soy de Espacio Creativo. Me interesa el paquete ${p.n}${extras.length ? " con " + extras.map(e => e.n).join(", ") : ""}. Arranque ${Q(ini * k)}${p.iniMax ? " a " + Q((ini - p.ini + p.iniMax) * k) : ""} y ${Q(mes * k)} al mes${k > 1 ? " (con IVA)" : ""}. ¿Cuándo empezamos?`;
+  $("#plan-wa").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(txt);
+}
+$("#plan-form").addEventListener("change", resumen);
+$("#cierre-wa").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola Antonio, vi la propuesta para Espacio Creativo y quiero hablar.");
+
+$("#pasos").innerHTML = [
+  ["3", "Llamada", "Revisamos sus precios, máquinas y materiales reales."],
+  ["2", "Lo armamos", "Sus fotos, sus trabajos y su lista de precios. Una o dos semanas."],
+  ["1", "Capacitación", "Una sesión con el equipo: mostrador, diseño y taller."],
+  ["0", "¡Despegue!", "Se publica y empieza a recibir pedidos. Seguimos ajustando con usted."]
+].map(([n, t, x]) => `<li><b>${n}</b><h3>${t}</h3><p>${x}</p></li>`).join("");
+
+$("#lista-dudas").innerHTML = [
+  ["¿Tengo que dejar de usar WhatsApp?", "No. El sistema le arma los mensajes y usted los manda por WhatsApp como siempre; la diferencia es que ya van con el link del pedido y la prueba."],
+  ["¿Mis clientes tienen que bajar una app?", "No. Todo abre en el navegador del celular con un link. Ni cuenta tienen que crear."],
+  ["¿Los precios de la demo son los míos?", "No, son de ejemplo. En la llamada cargamos sus precios reales, sus descuentos y sus materiales."],
+  ["¿Y si se me va el internet?", "Lo que ya está abierto sigue viéndose, y al volver el internet todo se sincroniza. Los datos viven en la nube con respaldo diario."],
+  ["¿Puedo cambiar precios y fotos yo mismo?", "Sí. Precios, materiales, trabajos del portafolio, reseñas y mensajes se cambian desde el panel, con un botón."],
+  ["¿Qué pasa si quiero cancelar?", "La mensualidad es mes a mes. Si cancela, le entregamos sus datos (clientes, pedidos y cotizaciones) en Excel."]
+].map(([p, r]) => `<details class="revela"><summary>${p}</summary><p>${r}</p></details>`).join("");
+
+pintarPaquetes(); resumen();
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visto"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+document.querySelectorAll(".revela").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
