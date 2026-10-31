@@ -38,7 +38,7 @@ VISTAS[""] = () => `
     <section class="despegue" id="despegue" aria-labelledby="t-hero">
       <div class="despegue-fijo">
         <canvas class="estrellas" id="estrellas" aria-hidden="true"></canvas>
-        ${personaje("marciano", { x: "5vw", y: "58vh", tam: "clamp(120px, 12vw, 175px)", vel: 60, rot: -25, clase: "tornasol-hero" })}
+        ${personaje("marciano", { x: "3vw", y: "72vh", tam: "clamp(120px, 12vw, 175px)", vel: 60, rot: -25, clase: "tornasol-hero" })}
         ${tornasol("gota", { x: "88vw", y: "70vh", tam: "clamp(90px, 11vw, 170px)", vel: 160, rot: -120, giro: "24deg", clase: "tornasol-hero" })}
         <div class="despegue-texto">
           <p class="eyebrow">${esc(M.ciudad)} · diseño · impresión · publicidad</p>
